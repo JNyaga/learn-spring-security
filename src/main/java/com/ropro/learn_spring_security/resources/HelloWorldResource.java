@@ -1,4 +1,4 @@
-package com.ropro.learn_spring_security;
+package com.ropro.learn_spring_security.resources;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
