@@ -1,4 +1,4 @@
-package com.ropro.learn_spring_security.basic;
+package com.ropro.learn_spring_security.jwt;
 
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -20,8 +20,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 import javax.sql.DataSource;
 
-// @Configuration
-public class BasicAuthSecurityConfiguration {
+@Configuration
+public class JwtSecurityConfiguration {
 
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
@@ -31,7 +31,6 @@ public class BasicAuthSecurityConfiguration {
         // disable session creation
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // http.formLogin(withDefaults());
         http.httpBasic(withDefaults());
 
         // disable csrf
@@ -40,23 +39,10 @@ public class BasicAuthSecurityConfiguration {
         // enable frame options
         http.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
 
+        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()));
+
         return http.build();
     }
-
-    // @Bean
-    // public UserDetailsService userDetailService() {
-    // var user = User.withUsername("joel")
-    // .password("{noop}dummy")
-    // .roles("USER")
-    // .build();
-
-    // var admin = User.withUsername("admin")
-    // .password("{noob}admin")
-    // .roles("ADMIN")
-    // .build();
-
-    // return new InMemoryUserDetailsManager(user, admin);
-    // }
 
     @Bean
     public DataSource dataSource() {
@@ -69,14 +55,12 @@ public class BasicAuthSecurityConfiguration {
     @Bean
     public UserDetailsService userDetailService(DataSource dataSource) {
         var user = User.withUsername("joel")
-                // .password("{noop}dummy")
                 .password("dummy")
                 .passwordEncoder(str -> passwordEncoder().encode(str))
                 .roles("USER")
                 .build();
 
         var admin = User.withUsername("admin")
-                // .password("{noob}admin")
                 .password("dummy")
                 .passwordEncoder(str -> passwordEncoder().encode(str))
                 .roles("ADMIN", "USER")
@@ -94,5 +78,8 @@ public class BasicAuthSecurityConfiguration {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    // @Bean
+    // public JwtDecoder jwtDecoder()
 
 }
