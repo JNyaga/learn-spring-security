@@ -1,8 +1,16 @@
 package com.ropro.learn_spring_security.jwt;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.interfaces.RSAPublicKey;
+import java.util.UUID;
+
+import javax.sql.DataSource;
+
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -25,16 +33,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.interfaces.RSAPublicKey;
-import java.util.UUID;
-
-import javax.sql.DataSource;
-
-@Configuration // Marks this class as a configuration for Spring Security
+// @Configuration // Marks this class as a configuration for Spring Security
 public class JwtSecurityConfiguration {
 
     @Bean
